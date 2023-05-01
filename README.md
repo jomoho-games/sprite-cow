@@ -12,6 +12,11 @@ Currently available online for you to use at http://spritecow.com
 Changes
 =======
 
+2023-05-01
+----------
+
+* Changed output to deliver a json array of all the clicked rectangles.
+
 2012-06-27
 ----------
 
