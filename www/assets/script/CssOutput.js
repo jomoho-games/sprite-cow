@@ -15,7 +15,7 @@ spriteCow.CssOutput = (function() {
 		var multiplier = Math.pow(10, afterDecimal || 0);
 		return Math.round(num * multiplier) / multiplier;
 	}
-	
+
 	function CssOutput($appendTo) {
 		var $container = $('<div class="css-output"></div>').appendTo( $appendTo );
 		this._$container = $container;
@@ -32,11 +32,12 @@ spriteCow.CssOutput = (function() {
 		this.percentPos = false;
 		this.bgSize = false;
 		this.selector = '.sprite';
+		this.atlas= [];
 		this._addEditEvents();
 	}
-	
+
 	var CssOutputProto = CssOutput.prototype;
-	
+
 	CssOutputProto.update = function() {
 		var indent = this.useTabs ? '\t' : '    ';
 		var rect = this.rect;
@@ -44,35 +45,36 @@ spriteCow.CssOutput = (function() {
 		var widthMultiplier = this.bgSize ? this.scaledWidth / this.imgWidth : 1;
 		var heightMultiplier = this.bgSize ? this.scaledHeight / this.imgHeight : 1;
 		var $file;
-		
+
 		$code.empty()
 			.append( $('<span class="selector"/>').text(this.selector) )
 			.append(' {\n');
-		
-		if (this.useBgUrl && this.backgroundFileName) {
-			$code.append( indent + "background: url('" );
-			$file = $('<span class="file"/>')
-				.append( $('<span data-inline-edit="file-path"/>').text( this.path ) )
-				.append( $('<span class="file-name"/>').text( this.backgroundFileName ) );
-			
-			$code.append( $file ).append( "') no-repeat " );
-		}
-		else {
-			$code.append( indent + "background-position: " );
-		}
 
-		if (this.percentPos) {
-			$code.append(
-				bgPercentVal( rect.x / -(rect.width - this.imgWidth) ) + ' ' +
-				bgPercentVal( rect.y / -(rect.height - this.imgHeight) ) + ';\n'
-			);
+		if (this.useBgUrl && this.backgroundFileName) {
+			// $code.append( indent + "background: url('" );
+			// $file = $('<span class="file"/>')
+			// 	.append( $('<span data-inline-edit="file-path"/>').text( this.path ) )
+			// 	.append( $('<span class="file-name"/>').text( this.backgroundFileName ) );
+
+			// $code.append( $file ).append( "') no-repeat " );
 		}
-		else {
+		// else {
+		// 	$code.append( indent + "background-position: " );
+		// }
+
+		$code.append( indent + "pos: [" );
+		// if (this.percentPos) {
+		// 	$code.append(
+		// 		bgPercentVal( rect.x / -(rect.width - this.imgWidth) ) + ' ' +
+		// 		bgPercentVal( rect.y / -(rect.height - this.imgHeight) ) + ',\n'
+		// 	);
+		// }
+		// else {
 			$code.append(
-				pxVal(-rect.x * widthMultiplier) + ' ' +
-				pxVal(-rect.y * heightMultiplier) + ';\n'
+				pxVal(-rect.x * widthMultiplier) + ', ' +
+				pxVal(-rect.y * heightMultiplier) + ']\n'
 			);
-		}
+		// }
 
 		if (this.bgSize) {
 			$code.append(
@@ -81,14 +83,19 @@ spriteCow.CssOutput = (function() {
 				pxVal(this.scaledHeight) + ';\n'
 			);
 		}
-		
+
 		$code.append(
 			indent + 'width: ' + pxVal(rect.width * widthMultiplier) + ';\n' +
 			indent + 'height: ' + pxVal(rect.height * heightMultiplier) + ';\n' +
 			'}'
 		);
+		this.atlas.push(rect);
+		$code.empty().append( $('<pre />').text(JSON.stringify(this.atlas)));
 	};
-	
+	CssOutputProto.atlas_update = function() {
+		console.log(JSON.stringify(this.atlas, null,2))
+	};
+
 	CssOutputProto._addEditEvents = function() {
 		var cssOutput = this;
 
@@ -99,7 +106,7 @@ spriteCow.CssOutput = (function() {
 			localStorage.setItem('cssOutputPath', newVal);
 		});
 	};
-	
+
 	return CssOutput;
 })();
 

@@ -2,7 +2,8 @@
   "name": "sprite-cow",
   "private": true,
   "scripts": {
-    "build": "./build.sh"
+    "build": "./build.sh",
+    "sass": "node-sass --output-style compressed www/assets/style/all.scss build/assets/9/style/all-min.css"
   },
   "repository": {
     "type": "git",
@@ -12,7 +13,9 @@
     "url": "https://github.com/jakearchibald/sprite-cow/issues"
   },
   "devDependencies": {
-    "node-sass": "^4.9.0",
     "uglify-js": "^3.4.0"
+  },
+  "dependencies": {
+    "node-sass": "^8.0.0"
   }
 }
